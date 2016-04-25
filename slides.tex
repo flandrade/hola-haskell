@@ -1,0 +1,397 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{listings}
+\usetheme{bjeldbak}
+\input{haskell-settings}
+
+\title{¡Hola, Haskell!}
+\author{Fernanda Andrade}
+\institute{Stack Builders}
+\date{28 de abril de 2016}
+
+\logo{\includegraphics[scale=0.10]{img/stackbuilders-logo.png}}
+
+\begin{document}
+  {%
+    \setbeamertemplate{headline}{}
+    \frame{\titlepage}
+  }
+
+
+%------------------------------------------------------------------------------------------------------------
+
+\section{Introducción}
+
+\begin{frame}[fragile]
+  \frametitle{¡Hola, mundo!}
+
+\begin{lstlisting}
+holaHaskell :: IO ()
+holaHaskell = putStrLn "Hola, Haskell"
+\end{lstlisting}
+
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+  \frametitle{Haskell}
+
+
+  \begin{columns}[T]
+    \begin{column}{.54\textwidth}
+      \begin{block}
+
+         \begin{figure}
+           \includegraphics[width=0.9\textwidth]{img/haskell.png}
+         \end{figure}
+
+         \begin{center}
+           \url{https://www.haskell.org/}
+         \end{center}
+
+      \end{block}
+    \end{column}
+
+    \begin{column}{.55\textwidth}
+
+      \begin{block}{}
+
+        \begin{itemize}
+	  \item Funcional
+          \item Puro
+	    \begin{itemize}
+              \item Inmutabilidad
+              \item Sin efectos secundarios
+              \item Transparencia referencial
+    \end{itemize} 
+	 \item Evaluación perezosa
+	  \item Tipificación estática
+	  \item Funciones de orden superior
+        \end{itemize} 
+
+      \end{block}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\section{Funcional}
+
+\begin{frame}[fragile]
+  \frametitle{Haskell es funcional}
+
+Factorial en C: 
+
+\begin{lstlisting}[language=c]
+int factorial(int n) {
+    int result = 1;
+    for (int i = 1; i <= n; ++i)
+        result *= i;
+    return result;
+}
+\end{lstlisting}
+
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+  \frametitle{Haskell es funcional}
+
+Factorial en Haskell: 
+
+\begin{lstlisting}
+factorial :: Integral -> Integral
+factorial 0 = 1
+factorial n = n * factorial (n-1)
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+\item No es imperativo.
+\item Evaluación de expresiones. 
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\section{Puro}
+
+\begin{frame}[fragile]
+  \frametitle{Haskell es puro}
+  \framesubtitle{Inmutabilidad}
+
+Secuencia Fibonacci en C: 
+
+\begin{lstlisting}[language=c]
+long long int fibb(int n) {
+    int fnow = 0, fnext = 1, tempf;
+    while(--n>0){
+        tempf = fnow + fnext;
+        fnow = fnext;
+        fnext = tempf;
+    }
+    return fnext;	
+}
+\end{lstlisting}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+  \frametitle{Haskell es puro}
+  \framesubtitle{Inmutabilidad}
+
+Secuencia Fibonacci en Haskell: 
+
+\begin{lstlisting}
+fibonacci :: Integer -> Integer
+fibonacci 0 = 0
+fibonacci 1 = 1
+fibonacci n = fibonacci (n - 1) + fibonacci (n - 2)
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+\item Variables y estructuras de datos son inmutables.
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+  \frametitle{Haskell no tiene efectos secundarios}
+
+En Haskell: 
+
+\begin{lstlisting}
+count :: List -> Int
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+En C:
+
+\begin{lstlisting}[language=c]
+int i = 0;int count (List ls) {  i = 5;
+  ...}
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+\item Funciones sólo pueden calcular y retornar valores. 
+\item Funciones garantizan integridad.
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+  \frametitle{Haskell es puro y funcional}
+  \framesubtitle{Referencia transparencial}
+
+\begin{lstlisting}
+reverse :: [a] -> [a]
+reverse []     = []
+reverse (x:xs) = reverse xs ++ [x]
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[numbers=none, backgroundcolor=\color{lightgray}, keywordstyle=\color{black}]
+> reverse [0,1,2,3,4,5]
+[5,4,3,2,1,0]
+\end{lstlisting}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+  \frametitle{Haskell es puro y funcional}
+  \framesubtitle{Referencia transparencial}
+
+\begin{lstlisting}
+propReverse :: [Integer] -> [Integer]
+propReverse xs = reverse (reverse xs)
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[numbers=none, backgroundcolor=\color{lightgray}, keywordstyle=\color{black}]
+> propReverse [0,1,2,3,4,5]
+[0,1,2,3,4,5]
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+\item Una función es llamada dos veces con los mismos parámetros, obtendremos siempre el mismo resultado.\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\section{Evaluación perezosa}
+
+\begin{frame}[fragile]
+  \frametitle{Haskell tiene evaluación perezosa}
+
+\begin{lstlisting}
+square :: Int -> Int
+square x = x * x
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=none, backgroundcolor=\color{lightgray}, keywordstyle=\color{black}]
+> square (1 + 2)
+=> (1 + 2) * (1 + 2)
+=> 3 * (1+2)
+=> 3 * 3
+=> 9
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+\item Haskell no calculará resultados hasta que se vea realmente forzado a hacerlo. 
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+  \frametitle{Haskell tiene evaluación perezosa}
+
+Primeros 5 números de una lista infinita
+
+\begin{lstlisting}[numbers=none, backgroundcolor=\color{lightgray}, keywordstyle=\color{black}]
+> take 5 [1..]
+[1,2,3,4,5]
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+\item Es posible trabajar con estructura de datos infinitos. 
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\section{Tipificado estáticamente}
+
+\begin{frame}[fragile]
+  \frametitle{Haskell es un lenguaje tipificado estáticamente}
+
+\begin{lstlisting}
+printString :: String -> IO ()
+printString word = putStrLn word
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{verbatim}
+> printString 5
+   <interactive>:18:13:
+    No instance for (Num String) arising from the literal ‘5’
+    In the first argument of ‘printString’, namely ‘5’
+    In the expression: printString 5
+    In an equation for ‘it’: it = printString 5
+\end{verbatim}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+\item Haskell verifica que el tipo de dato declarado coincide con el tipo inferido (en tiempo de compilación). 
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\section{Funciones de orden superior}
+
+\begin{frame}[fragile]
+  \frametitle{Funciones de orden superior}
+  \framesubtitle{map}
+
+\begin{lstlisting}
+map :: (a -> b) -> [a] -> [b]
+map _ [] = []
+map f (x:xs) = f x : map f xs
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[numbers=none, backgroundcolor=\color{lightgray}, keywordstyle=\color{black}]
+> map even [0,1,2,3,4,5]
+[True,False,True,False,True,False]
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[numbers=none, backgroundcolor=\color{lightgray}, keywordstyle=\color{black}]
+> map (+3) [0,1,2,3,4,5]
+[3,4,5,6,7,8]
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+\item Funciones pueden tomar funciones como parámetros y devolver funciones como resultado.
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+  \frametitle{Funciones de orden superior}
+  \framesubtitle{filter}
+
+\begin{lstlisting}
+filter :: (a -> Bool) -> [a] -> [a]
+filter _ [] = []
+filter p (x:xs)
+    | p x       = x : filter p xs
+    | otherwise = filter p xs
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[numbers=none, backgroundcolor=\color{lightgray}, keywordstyle=\color{black}]
+> filter even [1,2,3,4,5,6]
+[2,4,6]
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[numbers=none, backgroundcolor=\color{lightgray}, keywordstyle=\color{black}]
+> filter (>3) [1,2,3,4,5,6]
+[4,5,6]
+\end{lstlisting}
+
+\end{frame}
+
+
+
+
+\end{document}
