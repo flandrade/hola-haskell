@@ -1,0 +1,16 @@
+\frametitle{Funciones de orden superior}
+  \framesubtitle{filter}
+
+
+\begin{lstlisting}[numbers=none, backgroundcolor=\color{lightgray}, keywordstyle=\color{black}]
+> filter even [1,2,3,4,5,6]
+[2,4,6]
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[numbers=none, backgroundcolor=\color{lightgray}, keywordstyle=\color{black}]
+> filter (>3) [1,2,3,4,5,6]
+[4,5,6]
+\end{lstlisting}
+
